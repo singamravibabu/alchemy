@@ -1,0 +1,2028 @@
+Quick Steps to Start a Python Project:
+#####################################
+
+Working directory: D:\alchemy>
+
+STEP 1:
+Create a git repository & virtual environment
+
+D:\alchemy> git init -b main
+D:\alchemy> python -m venv .env
+
+
+
+STEP 2:
+Activate the virtual environment
+
+D:\alchemy>.env\Scripts\activate
+
+(.env) D:\alchemy>
+
+
+
+STEP 3:
+Install Django
+
+(.env) D:\alchemy> pip install Django
+
+
+
+STEP 4:
+Confirming Django installation:
+
+(.env) D:\alchemy> django-admin --version
+
+
+
+STEP 5:
+Initiate Django project
+
+(.env) D:\alchemy> django-admin startproject project1
+
+
+
+STEP 6:
+Change to project directory
+
+(.env) D:\alchemy> cd project1
+
+
+
+STEP 7:
+Launching the Development Server
+
+(.env) D:\alchemy\project1> python manage.py runserver
+
+http://127.0.0.1:8000
+
+
+
+STEP 8:
+Apply migrations
+
+(.env) D:\alchemy\project1> python manage.py migrate
+
+
+
+STEP 9:
+Accessing Django's admin Interface
+
+(.env) D:\alchemy\project1> python manage.py createsuperuser
+
+http://127.0.0.1:8000/admin
+
+
+
+STEP 10:
+Creating an app
+
+(.env) D:\alchemy\project1> python manage.py startapp test_app
+
+
+
+STEP 11:
+Create HTML 'templates' directory under project directory.
+The 'templates' Directory is for storing HTML files.
+In Django, template is a HTML file.
+
+(.env) D:\alchemy\project1> mkdir templates
+
+
+
+STEP 12:
+Register the 'test_app' in settings.py
+
+Edit: project1\project1\settings.py file
+
+INSTALLED_APPS = [
+	...,
+	"test_app",
+]
+
+
+
+STEP 13:
+Register 'templates' directory in settings.py file
+
+Edit: project1\project1\settings.py file
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+TEMPLATE_DIR = BASE_DIR / 'templates'
+...
+TEMPLATES = [
+	{...
+	"DIRS":[TEMPLATE_DIR],
+	...}
+]
+
+
+***********
+In browser
+-> Type URL (www.mysite.com/products/15/)
+-> Request for the URL page
+-> Django project configuration file: urls.py
+-> Django app urls file: urls.py
+-> views.py ( returns html page | model (database) | text )
+-> Respond to the Request
+-> browser
+
+browser -> request -> urls.py (project) -> urls.py (app) -> views.py -> response -> browser
+
+***********
+
+NOTE: views.py file contains two types of views:
+- function based views (define function)
+- class based views (define class)
+
+
+
+STEP 14:
+Create function based view
+
+test_app/views.py
+--------------------
+from django.shortcuts import render
+from Django.http import HttpResponse
+
+def function_veiw_test(request):
+	return HttpResponse('<h1>Function-based View - Siricila</h1>')
+
+
+
+STEP 15:
+Create Class Based View
+
+test_app/views.py
+-----------------
+from django.shortcuts import render
+from django.http import HttpResponse
+from django.views.generic import TemplateView
+
+def function_view_test(request):
+	return HttpResponse('<h1>Hello world! Function-based View Test</h1>')
+
+class ClassViewTest(TemplateView):
+	template_name = 'test.html'
+
+
+
+STEP 16:
+Add 'include' in the urls.py file
+
+project1/urls.py
+-------------------
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+	path('admin/', admin.site.urls),
+	path('test-app/', include('test_app.urls'))
+]
+
+
+
+STEP 17:
+Create a new urls.py file under the test_app directory
+
+test_app/urls.py
+------------------
+from django.urls import path
+from .views import function_view_test, ClassViewTest
+
+urlpatterns = [
+	path('test-function/', function_view_test),
+	path('test-class/', ClassViewTest.as_view())
+]
+
+
+
+18. Create a new app "employee_learning"
+
+C:\> python manage.py startapp employee_learning
+
+
+19. Register the new app in settings.py
+
+project1/project1/settings.py
+----------------------------
+INSTALLED_APPS = [
+ 'django.contrib.admin',
+ 'django.contrib.auth',
+ 'django.contrib.contenttypes',
+ 'django.contrib.sessions',
+ 'django.contrib.messages',
+ 'django.contrib.staticfiles',
+ 'test_app',
+ 'employee_learning',
+]
+
+
+20. Edit the models.py file
+
+employee_learning/models.py
+----------------------------
+from django.db import models
+class Employee(models.Model):
+	name=models.CharField(max_length=25)
+
+
+21. The makemigrations command
+
+C:\> python manage.py makemigrations employee_learning
+
+employee_learning/models.py
+----------------------------
+from django.db import models
+class Employee(models.Model):
+	name=models.CharField(max_length=25)
+
+class Division(models.Model):
+	div_name=models.CharField(max_length=25)
+
+C:\> python manage.py makemigrations employee_learning
+
+
+22. The migrate command
+
+C:\> python manage.py migrate
+C:\> python manage.py runserver
+
+
+23. Add Models in Django Admin – admin.py
+
+employee_learning/admin.py
+----------------------------
+from django.contrib import admin
+# Register your models here.
+from .models import Employee
+from .models import Division
+admin.site.register(Employee)
+admin.site.register(Division)
+
+Go to localhost:8000/admin/
+
+
+24. Change Display Name of Record Objects
+
+employee_learning/models.py
+----------------------------
+class Division(models.Model):
+	div_name=models.CharField(max_length=25)
+
+	def __str__(self):
+		return self.div_name
+
+
+
+25. Customize record names
+
+employee_learning/models.py
+------------------------------
+class Employee(models.Model):
+	name=models.CharField(max_length=25)
+
+	def __str__(self):
+		return f'{self.id} : {self.name}'
+
+
+
+26. Add a new field in an existing model after data entry
+
+employee_learning/models.py
+---------------------------
+class Division(models.Model):
+	div_name=models.CharField (max_length=25)
+	in_scope=models.BooleanField (help_text="If the division is target for the learning program, check this field.")
+
+	def __str__(self):
+		return self.div_name
+
+
+27. Run the makemigrations command
+
+C:\> python manage.py makemigrations employee_learning
+
+Command Line - INTERACTIVE
+Select an option: 1
+
+Command Line - INTERACTIVE
+>>> False
+
+
+28. Run the migrate command
+
+C:\> python manage.py migrate
+
+
+29. Check the Django admin site
+
+Go to localhost:8000/admin/
+
+
+30. Add choices option & verbose_name, default options
+
+employee_learning/models.py
+----------------------------
+class Employee(models.Model):
+	PRIORITIES=[('H','High'), ('M','Medium'), ('L','Low'),]
+	name=models.CharField(max_length=25,  verbose_name="Employee Name")
+	priority=models.CharField(max_length=1, choices=PRIORITIES)
+
+	def __str__(self):
+		return self.name
+
+
+31. The default option
+
+employee_learning/models.py
+----------------------------
+priority=models.CharField(max_length=1, choices=PRIORITIES, default="M")
+
+
+32. The verbose_name option
+
+employee_learning/models.py
+-----------------------------
+priority=models.CharField(max_length=1, verbose_name="Learning Priorities", choices=PRIORITIES, default="M")
+
+
+33. Execute the changes in the database
+
+C:\> python manage.py makemigrations employee_learning
+C:\> python manage.py migrate
+
+
+34. Check the admin site
+
+Run the runserver command and go to the admin page. You can confirm that the three options (1. choices, 2. default, 3. verbose_name) are appropriately executed.
+
+
+DateField with datetime Module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+35. Add an editable data registration date
+
+employee_learning/models.py
+----------------------------
+from django.db import models
+import datetime
+class Employee(models.Model):
+	PRIORITIES=[('H','High'), ('M','Medium'),('L','Low'),]
+	name=models.CharField(max_length=25, verbose_name="Employee Name")
+	priority=models.CharField(max_length=1, choices=PRIORITIES, default="M", verbose_name="Learning Priorities")
+	reg_date=models.DateField(default= datetime.date.today, verbose_name="Data Registration Date")
+
+	def __str__(self):
+		return self.name
+
+
+
+36. Execute the changes in the database and check the admin site
+
+C:\> python manage.py makemigrations employee_learning
+C:\>  python manage.py migrate
+C:\>  python manage.py runserver
+
+
+
+Django Models – Relationship Fields
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+37. Learn how to use ForeignKey
+
+a) Add a new field in the Employee model in models.py
+
+Edit the Employee model in the models.py file to connect with the Division model.
+• Field name: division
+• Field type: ForeignKey
+• Related model name: Division
+• On_delete: models.CASCADE
+
+employee_learning/models.py
+--------------------------
+from django.db import models
+import datetime
+class Employee(models.Model):
+	PRIORITIES=[('H','High'), ('M','Medium'), ('L','Low'),]
+	name=models.CharField(max_length=25, verbose_name="Employee Name")
+	priority=models.CharField(max_length=1, choices=PRIORITIES, default="M", verbose_name="Learning Priorities")
+	reg_date=models.DateField(default= datetime.date.today, verbose_name= "Data Registration Date")
+	division=models.ForeignKey(Division, on_delete=models.CASCADE)
+
+	def __str__(self):
+		return self.name
+
+
+b) Move the Division model before the Employee model in models.py
+
+Cut the code of the Division model and paste the code before the Employee model in the models.py file. This is needed because the Employee model will refer to the Division model in the new field.
+
+employee_learning/models.py
+-----------------------------
+from django.db import models
+import datetime
+class Division(models.Model):
+:
+	def __str__(self):
+	return self.div_name
+class Employee(models.Model):
+:
+
+
+c) Run the makemigrations command
+
+C:\> python manage.py makemigrations employee_learning
+
+Command Line - INTERACTIVE
+Select an option: 1
+Please enter the default value as valid Python.
+The datetime and django.utils.timezone modules are available, so it is possible to provide e.g. timezone.now as a value.
+Type 'exit' to exit this prompt
+>>>
+
+
+Command Line - INTERACTIVE
+>>> 1
+Migrations for 'employee_learning':
+employee_learning/migrations/0007_employee_division.py
+- Add field division to employee
+
+
+
+d) Migrate the model into the database and run the runserver
+
+C:\> python manage.py migrate
+C:\> python manage.py runserver
+
+
+e) Check the Django admin site
+
+
+
+38. OneToOneField
+
+a) Add Personal Info model in models.py
+
+employee_learning/models.py
+---------------------------
+:
+class Employee(models.Model):
+:
+class PersonalInfo(models.Model):
+	name=models.OneToOneField(Employee, on_delete=models.CASCADE, primary_key=True)
+	tel=models.CharField(max_length=15)
+	address=models.CharField(max_length=50)
+
+
+b) Add Personal Info model in admin.py
+
+employee_learning/admin.py
+---------------------------
+from .models import Employee
+from .models import Division
+from .models import PersonalInfo
+admin.site.register(Employee)
+admin.site.register(Division)
+admin.site.register(PersonalInfo)
+
+c) Execute the changes in the database and check the admin site
+
+C:\> python manage.py makemigrations employee_learning
+C:\> python manage.py migrate
+C:\> python manage.py runserver
+
+
+39. ManyToManyField
+
+a) Add LearningCourse model in models.py
+
+employee_learning/models.py
+---------------------------
+:
+class Employee(models.Model):
+:
+class PersonalInfo(models.Model):
+:
+class LearningCourse (models.Model):
+	LEVEL=[('B','Basic'), ('I','Intermediate'), ('A','Advanced'),]
+	title = models.CharField(max_length=50, unique=True)
+	level = models.CharField(max_length=1, choices=LEVEL)
+	employee = models.ManyToManyField(Employee)
+
+	def __str__(self):
+		return self.title
+
+
+b) Add LearningCourse model in admin.py
+
+employee_learning/admin.py
+----------------------------
+from .models import Employee
+from .models import Division
+from .models import PersonalInfo
+from .models import LearningCourse
+admin.site.register(Employee)
+admin.site.register(Division)
+admin.site.register(PersonalInfo)
+admin.site.register(LearningCourse)
+
+
+c) Execute the changes in the database and check the admin site
+
+Command Line - INPUT
+C:\> python manage.py makemigrations employee_learning
+C:\> python manage.py migrate
+C:\> python manage.py runserver
+
+
+
+Create CRUD Web Application
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+40. Import generic views and models used in this view
+
+
+browser -> urls.py -> views.py -> templates (directory) -> HTML files
+
+All generic views are stored in django.view.generic. Import five generic views (class-based views):
+• ListView		- R of (CRUD)
+• DetailView		- R of (CRUD)
+• CreateView		- C of (CRUD)
+• UpdateView		- U of (CRUD)
+• DeleteView		- D of (CRUD)
+
+
+employee_learning/views.py
+---------------------------
+from django.shortcuts import render
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from .models import LearningCourse
+
+
+
+41. Create the CourseList and CourseDetail views
+
+Syntax: views.py
+class MyView(ListView):
+	template_name = xxx
+	model = xxx
+
+template_name = subdir/template.html
+
+
+
+employee_learning/views.py
+-----------------------------
+from django.shortcuts import render
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from .models import LearningCourse
+class CourseList(ListView):
+	model = LearningCourse
+	template_name = 'employee_learning/course_list.html'
+	context_object_name = 'course_object_list'
+
+class CourseDetail(DetailView):
+	model=LearningCourse
+	template_name = 'employee_learning/course_detail.html'
+	context_object_name = 'course_object'
+
+
+42. Create the CourseCreate, CourseUpdate and CourseDelete views
+
+employee_learning/views.py
+-----------------------------
+ :
+from .models import LearningCourse
+from django.urls import reverse_lazy
+ :
+class CourseDetail(DetailView):
+	model=LearningCourse
+	template_name = 'employee_learning/course_detail.html'
+	context_object_name = 'course_object'
+class CourseCreate(CreateView):
+	model=LearningCourse
+	template_name = 'employee_learning/course_create.html'
+	fields=('title', 'level', 'employee')
+	success_url=reverse_lazy ('course_list')
+class CourseUpdate(UpdateView):
+	model=LearningCourse
+	template_name = 'employee_learning/course_update.html'
+	fields=('title', 'level','employee')
+	success_url=reverse_lazy ('course_list')
+class CourseDelete(DeleteView):
+	model=LearningCourse
+	template_name = 'employee_learning/course_delete.html'
+	success_url=reverse_lazy ('course_list')
+
+
+43. Edit url files
+
+-> Create a new urls.py file under the employee_learning directory
+
+Command Line - INPUT
+C:\> cd employee_learning
+C:\> touch urls.py
+
+a. Import views
+
+employee_learning/urls.py
+---------------------------
+from django.urls import path
+from .views import CourseList, CourseDetail, CourseCreate, CourseUpdate, CourseDelete
+
+
+b. Add URL patterns for list and create pages
+
+employee_learning/urls.py
+----------------------------
+from django.urls import path
+from .views import CourseList, CourseDetail, CourseCreate, CourseUpdate, CourseDelete
+urlpatterns = [
+	path('course-list/', CourseList.as_view(), name='course_list'),
+	path('course-create/', CourseCreate.as_view(), 	name='course_create'),
+]
+
+
+c. Add URL patterns for detail, update and delete pages
+
+employee_learning/urls.py
+------------------------
+:
+urlpatterns = [
+	path('course-list/', CourseList.as_view(), name='course_list'),
+	path('course-detail/<int:pk>/', CourseDetail.as_view(), name='course_detail'),
+	path('course-create/', CourseCreate.as_view(), name='course_create'),
+	path('course-update/<int:pk>/', CourseUpdate.as_view(), name='course_update'),
+	path('course-delete/<int:pk>/', CourseDelete.as_view(), name='course_delete'),
+]
+
+
+44. Add an urlpattern in the project urls.py
+
+project1/project1/urls.py
+---------------------------
+from django.contrib import admin
+from django.urls import path, include
+urlpatterns = [
+path('admin/', admin.site.urls),
+path('test-app/', include('test_app.urls')),
+path('employee-learning/', include('employee_learning.urls')),
+]
+
+
+
+
+
+Django Template Language (DTL)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-> Django templates serve as a bridge between HTML and Python code, especially for views.py
+
+
+{{variable}}
+	-> display data (objects) passed by views.py using this format
+
+
+
+{{name|filter}}
+	-> Using the filter we can modify variables for display.
+
+{{name.lower}} -> display the value of the {{name}} variable in lowercase text
+
+{{name|truncatewords:n}} -> displays the first n words of the {{name}} variable 
+
+{{text|linebreaks}} converts line breaks in {{text}} variable to <p> tag
+
+{{name:default:"default data"}} displays when the {{name}} variable is false or empty
+
+
+{%tag%}
+	-> using this format, we can apply simple logic e.g., for.., if...else.
+
+
+{#Comments#}
+	Using this format, we can add comments. Comments won't be displayed in browser.
+
+
+1. Template for List Page
+-------------------------
+list.html
+- - - - - -
+{% for course in object_list %}
+<p> {{ course.title }} </p>
+{% endfor %}
+
+
+2. {% for ... in object_list %} ...{% endfor %}
+
+3. Object attribute to be displayed
+
+{{ course.name }}
+
+
+
+45. Edit course_list.html
+
+<h1>LIST Page</h1>
+{% for course  in object_list %}
+<p>{{ course.title }}</p>
+<hr>
+{% endfor %}
+
+
+c:\> python manage.py runserver
+
+Add some dummy data going to Django admin page (localhost:8000/admin) and data for the Learning course
+
+
+46. Add uppercase filter
+
+Adding uppercase filter allows to change the title name to uppercase
+
+
+templates/employee_learning/course_list.html
+------------------------------
+<h1>LIST Page</h1>
+{% for course  in object_list %}
+<p>{{ course.title|upper }}</p>
+<hr>
+{% endfor %}
+
+
+47. Check the user-friendly name for object_list
+
+In CourseList, under views.py file, we set context_object_name = 'course_object_list'.
+
+templates/employee_learning/course_list.html
+------------------------------
+<h1>LIST Page</h1>
+{% for course  in course_object_list %}
+<p>{{ course.title|upper }}</p>
+<hr>
+{% endfor %}
+
+
+48. get_FOO_display method
+
+When using choices option in the model, the data shown in the browser may be the key to the choices (not the human-readable name).
+
+The get_FOO_display method can change it to the human-readable name.
+FOO, in Django template context, it represents an object attribute that is defined in the model field with the choices option.
+
+To display a normal model field
+{{ object.FOO }}
+
+To display a human-readable name for the field with the choices option
+{{ object.get_FOO_display }}
+
+
+49. Add a human-readable name to the choices option
+
+a) Add the object and attribute in a normal way
+
+templates/employee_learning/course_list.html
+------------------------------
+<h1>LIST Page</h1>
+{% for course  in course_object_list %}
+<p>{{ course.title|upper }}</p>
+<p>{{ course.level }}</p>
+<hr>
+{% endfor %}
+
+
+b) Add the get_FOO_display method
+
+Replace the 'level' part with 'get_level_display'
+
+
+templates/employee_learning/course_list.html
+------------------------------
+<h1>LIST Page</h1>
+{% for course  in course_object_list %}
+<p>{{ course.title|upper }}</p>
+<p>{{ course.get_level_display }}</p>
+<hr>
+{% endfor %}
+
+
+
+50. Template for Detail Page
+
+
+detail.html
+------------
+<p> Course Title : {{ object.title }} </p>
+<p>Level : {{ object.level }} </p>
+
+
+How is a detail page displayed?
+1. An HTTP request is generated by a browser.
+	URL .../detail/3/
+		-> record object with id=3
+2. URL Dispatcher (ursl.py) dispatches the request to DetailView 
+3. DetailView calls the third record (id=3) through models.py
+4. The 'object' part in detail.html is replaced with the record object.
+5. DetailView returns HTML document with requested data (record object id=3)
+
+
+51. Create a template for the detail page
+
+We implement the uppercase filter and the get_FOO_display method
+
+a) Edit course_detail.html
+
+templates/employee_learning/course_detail.html
+---------------------
+<h1>DETAIL Page</h1>
+<p>Course Title : {{ object.title|upper }}</p>
+<p>Level : {{ object.get_level_display }}</p>
+
+Go the URL: http://127.0.0.1:8000/employee-learning/course-detail/3/
+
+
+b) Check the user-friendly name for the object
+
+In CourseDetail, we set the context_object_name = 'course_object'
+
+
+templates/employee_learning/course_detail.html
+---------------------
+<h1>DETAIL Page</h1>
+<p>Course Title : {{ course_object.title|upper }}</p>
+<p>Level : {{ course_object.get_level_display }}</p>
+
+
+Go the URL: http://127.0.0.1:8000/employee-learning/course-detail/3/
+
+
+52. Template with Model Relations
+
+a) Model with ForeignKey
+	One-To-Many
+		WE can display data from the related model by connecting  field names with . (dot).
+
+Display division name through the Employee model:
+	{{ object.division.div_name }}
+
+
+b) Model with ManyToManyField
+
+To display ManyToMany File, we need to do two things:
+
+i. Use the all() method to call the employee object as a QuerySet
+ii. Use the 'for' statement
+
+
+
+53. How to handle ManyToManyField in the detail page template
+
+a) Without the all() method and the for statement
+
+templates/employee_learning/course_detail.html
+---------------------
+<h1>DETAIL Page</h1>
+<p>Course Title : {{ course_object.title|upper }}</p>
+<p>Level : {{ course_object.get_level_display }}</p>
+<p>Assigned Employees:<p>
+<p>{{ object.employee }}</p>
+
+
+b) Only with the all() method
+
+
+templates/employee_learning/course_detail.html
+---------------------
+<h1>DETAIL Page</h1>
+<p>Course Title : {{ course_object.title|upper }}</p>
+<p>Level : {{ course_object.get_level_display }}</p>
+<p>Assigned Employees:<p>
+<p>{{ object.employee.all }}</p>
+
+
+The queryset is display, but not in the right format.
+
+
+c) Only with the for statement
+
+
+templates/employee_learning/course_detail.html
+---------------------
+<h1>DETAIL Page</h1>
+<p>Course Title : {{ course_object.title|upper }}</p>
+<p>Level : {{ course_object.get_level_display }}</p>
+<p>Assigned Employees:<p>
+{% for emp in object.employee %}
+<p>{{ emp.name }} : {{ emp.division }}</p>
+{% endfor %}
+
+
+We encounter an error: 'ManyRelatedManager' object is not iterable
+This means that Django expects an iterable object like QuerySet, but the data set is not iterable.
+
+
+d) With both all() method and the for statement
+
+
+templates/employee_learning/course_detail.html
+---------------------
+<h1>DETAIL Page</h1>
+<p>Course Title : {{ course_object.title|upper }}</p>
+<p>Level : {{ course_object.get_level_display }}</p>
+<p>Assigned Employees:<p>
+{% for emp in object.employee.all %}
+<p>{{ emp.name }} : {{ emp.division }}</p>
+{% endfor %}
+
+
+54. Template for Create and Update page
+
+
+create.html / update.html (syntax)
+-----------------------------------
+<form method="post"> {% csrf_token %}
+{{ form.as_p }}
+<input type="submit" value="Save">
+</form>
+
+Three key parts in the create and update page template:
+1. A form with the <input> tag
+2. {{ form.as_p }}
+3. {% csrf_token %}
+
+
+55. A form with the <input> tag
+
+In the <form> tag the POST method is used usually for input data transfer.
+
+The <input> tag with the type="submit" attribute creates a data submission button. We can also use <button> tag instead.
+
+
+56. {{ form.as_p }}
+
+The form part is an object defined by the view.
+We can see that in views.py, we set the field attribute:
+fields=('title', 'level','employee')
+
+The model fields are converted into input forms through the form object.
+
+The as_p() method is used to add the <p> tags for each form element. Similar methods like as_ul(), as_table(), but as_p() is often used for the form object.
+
+
+57. {% csrf_token %}
+
+This is used to protect against Cross-Site Request Forgery (CSRF).
+
+By adding {% csrf_token %}, Django generates a token to build a more secure communication when a user is sending data through the input forms.
+
+If we don't this tag then use will see Forbidden error message.
+
+
+58. Make create and update page templates
+
+a) Edit course_create.html and check the result in a browser
+
+
+templates/employee_learning/course_create.html
+---------------------
+<h1>CREATE Page</h1>
+<form method="post"> {% csrf_token %}
+{{ form.as_p }}
+<input type="submit" value="Save">
+</form>
+
+
+b) Edit course_update.html
+
+templates/employee_learning/course_update.html
+---------------------
+<h1>UPDATE Page</h1>
+<form method="post"> {% csrf_token %}
+{{ form.as_p }}
+<input type="submit" value="Save">
+</form>
+
+Go to the URL:
+http://127.0.0.1:8000/employee-learning/course-update/3/
+
+The 3 in the URL is the id number
+
+
+
+59. Template for Delete Page
+
+-> To confirm or delete the existing data
+
+There are three parts in the delete page:
+1. A form with the <input> tag
+2. {% csrf_token %}
+3. A confirmation message with the name of the object to be deleted
+
+
+{{ object }}
+-> Used to display the name of the object to be deleted.
+-> It is defined in one of the fields
+
+
+60. Creating a delete page template
+
+a) Edit course_delete.html
+
+templates/employee_learning/course_delete.html
+---------------------
+<h1>DELETE Page</h1>
+<form method="post"> {% csrf_token %}
+<p>Are you sure you want to delete "{{ object }}"?</p>
+<input type="submit" value="Confirm">
+</form>
+
+
+Go to the URL:
+http://127.0.0.1:8000/employee-learning/course-delete/3/
+
+
+b) Check where the object name comes from
+
+-> To understand the {{ object }} name, we need update the LearningCourse model in the models.py file.
+
+Comment the method __str__ in the LearningCourse model;
+
+class LearningCourse (models.Model):
+	LEVEL=[('B','Basic'), ('I','Intermediate'), ('A','Advanced'),]
+	title = models.CharField(max_length=50, unique=True)
+	level = models.CharField(max_length=1, choices=LEVEL)
+	employee = models.ManyToManyField(Employee)
+
+	#def __str__(self):
+	#	return self.title
+
+
+
+61. Add Links - {% url %} tag
+
+-> This tag used to add links to each page
+-> The tag handles 'reverse URL resolution' - it specifies URLs by using the URL name defined in urls.py
+
+
+62. Basic URL
+
+-> You can use the URL name from the urls.py file
+
+
+63. URLs with variables
+
+Example, each detail page is defined by the id, which is also set as the 'primary key' in the database.
+-> To create a link to each detail page, we need to pass pk information
+
+
+64. Add links to Django templates
+
+-> adding links using {% url %} tags
+
+a) Prepare HTML code for links to each page
+
+-> For efficient operation, prepare a list of links to each page using a text file (any memo app) so that we can copy and paste each code into related document sections.
+
+
+Use the URL names from the urls.py file under the employee_learning directory:
+
+Text File:
+link to list page
+<a href="{% url 'course_list'%}">List</a>
+link to detail page
+<a href="{% url 'course_detail'%}">Go Detail</a>
+link to create page
+<a href="{% url 'course_create'%}">Create</a>
+link to update page
+<a href="{% url 'course_update'%}">Update</a>
+link to delete page
+<a href="{% url 'course_delete'%}">Delete</a>
+
+
+b) Design the link structure
+
+-> before pasting the code for links, we need to decide where we want to put them
+-> As the list page and create page are not record-object-specific, we can add the link on any page
+-> However, to make a link to a specific detail, update or delete page, we need to manage how to set a link to them.
+
+
+The design of the link structure that we apply in this practice:
+- Links to the list page and create page
+	-> put them on all pages
+- A link to the detail page:
+	-> put the link for each data record on the list page
+- Links to the update and delete page
+	-> put them on the detail page
+
+
+c) Copy and paste the link code
+
+i) Links to the list page and create a page in all templates
+
+
+templates/employee_learning/course_create.html
+---------------------
+<a href="{% url 'course_list'%}">List</a>
+<a href="{% url 'course_create'%}">Create</a>
+<h1>CREATE Page</h1>
+<form method="post"> {% csrf_token %}
+...
+
+
+ii) Link to the detail page in the list page template
+
+-> make sure that we put the code between the 'for' statement.
+-> if we paste the code outside of the for statement, the value for pk won't be correctly defined.
+
+templates/employee_learning/course_list.html
+---------------------
+<h1>LIST Page</h1>
+{% for course  in course_object_list %}
+<p>{{ course.title|upper }}</p>
+<p>{{ course.get_level_display }}</p>
+<a href="{% url 'course_detail' course.pk%}">Go Detail</a>
+<hr>
+{% endfor %}
+
+
+iii) Links to the update and delete page in the detail page template
+
+
+templates/employee_learning/course_detail.html
+---------------------
+<h1>DETAIL Page</h1>
+<p>Course Title : {{ course_object.title|upper }}</p>
+<p>Level : {{ course_object.get_level_display }}</p>
+<p>Assigned Employees:<p>
+{% for emp in object.employee.all %}
+<p>{{ emp.name }} : {{ emp.division }}</p>
+{% endfor %}
+<a href="{% url 'course_update' object.pk%}">Update</a>
+<a href="{% url 'course_delete' object.pk%}">Delete</a>
+
+
+65. Extend Templates - {% extends %} tag
+
+-> In a website, there are several pages using a similar design structure.
+-> Django templates can support the creation of a master template.
+-> Each page can customize the master template by extending the master template.
+-> The {% extends %} tag is used to extend the master template.
+
+Steps:
+1. Create a parent.html (or base.html)
+2. In the parent file, add code for commonly used sections.
+3. In the parent file, add {% block name %} and {% endblock %} for the section that you want to customize.
+4. Create child.html
+5. In the child file, add {% extends "parent.html" %} in the beginning of the file.
+6. In the child file, add code between {% block name %} and {% endblock %}
+
+
+66. How to use template extension
+
+a) Create a base.html directory under templates directory
+
+-> The first two lines are links to the list page and create page
+-> The {% block body %}...{% endblock %} part will be overwritten by the other HTML files.
+-> The last part is footer.
+
+templates/base.html
+--------------------
+<a href="{% url 'course_list' %}">List</a>
+<a href="{% url 'course_create' %}">Create</a>
+{% block body %}
+<p>Insert body contents here</p>
+{% endblock %}
+<h6>2023 Employee Learning</h6>
+
+
+b) Edit other template files
+
+Open the template file and do the following:
+-> Add the {% extends "base.html" %} tag in the beginning
+-> Delete the links to the list page and the create page that are already written in the base.html file
+-> Add the {% block body %} and {% endblock %} tags
+
+
+templates/employee_learning/course_create.html
+--------------------
+{% extends "base.html" %}|
+{% block body %}
+<h1>CREATE Page</h1>
+<form method="post"> {% csrf_token %}
+{{ form.as_p }}
+<input type="submit" value="Save">
+</form>
+{% endblock %}
+
+
+
+67. Check Developing App UI on Mobile Device
+
+python manage.py runserver [Local IP Address:Port]
+
+settings.py (syntax)
+	ALLOWED_HOSTS = ["Local IP address"]
+
+
+68. Edit settings.py - add the IP address under ALLOWED_HOSTS
+
+config/settings.py
+-------------------
+ALLOWED_HOSTS = ["localhost", "192.168.xx.xx"]
+
+
+69. Execute the runserver command with specifying IP address and port
+
+Go to project directory
+
+C:\...> python manage.py runserver 192.168.86.96:8000
+
+Got to browser:
+192.168.86.96:8000/employee-learning/course-list/
+
+
+70. (Optional) Make the local IP address static
+
+
+71. Django Templates with Bootstrap
+
+Bootstrap is front-end toolkit
+Bootstrap provides predefined CSS and JavaScript code
+
+
+72. Bootstrap Quick Start
+
+Go to: https://getbootstrap.com/
+Click on "Read the docs" button
+
+
+73. Get code for CDN
+
+-> Find a CDN version that is easier to implement. Click on the copy button and get the code.
+-> Paste the code into the base.html file and make some adjustments
+
+templates/base.html
+-------------
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Employee Learning</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  </head>
+  <body>
+<a href="{% url 'course_list' %}">List</a>
+<a href="{% url 'course_create' %}">Create</a>
+{% block body %}
+<p>Insert body contents here</p>
+{% endblock %}
+<h6>2023 Employee Learning</h6>    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  </body>
+</html>
+
+
+Check the results...
+
+
+
+74. Add Navbar (Navigation Bar)
+
+-> Add a navigation bar style to the links on the List page and Create page using the NavBar component from Bootstrap.
+
+
+75. Go to the Navbar section under Components
+
+https://getbootstrap.com/
+
+Copy the code for one of the Navbar components
+
+
+templates/base.html
+----------
+<body>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Training Registration</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'course_list'%}">List</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'course_create'%}">
+            Create</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+{% block body %}
+
+
+Shrink the browser window size horizontally, as Bootstrap applies the responsive design concept, we can see that the navbar menu items are collapsed under the hamburger menu.
+
+-- ALTERED THE PREVIOUS ONE --
+
+
+templates/base.html
+----------
+<body>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Training Registration</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'course_list' %}">List</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'course_create'%}">Create</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+{% block body %}
+
+
+76. Style buttons
+
+-> Bootstrap provides quick styling code for buttons.
+-> Bootstrap Buttons -> Components -> Buttons -> Variants
+
+Pick a color theme for each button
+
+
+77. Before adjusting code, use a design principle.
+
+Small guidance:
+
+List page
+-> "Go Detail" button: primary
+Detail page
+-> "Update" button: warning
+-> "Delete" button: danger
+Create page
+-> "Save" button: primary
+Delete page
+"Confirm" button: danger
+
+
+Don't need copy the entire code, just copy only the class: "btn btn-primary" for the primary color buttons.
+
+
+templates/course_create.html
+------------
+<input type="submit" value"Save" class="btn btn-primary">
+
+
+
+78. Style the List page with a Card and Flex box
+
+-> Use Bootstrap to make a card-style layout
+
+Bootstrap Cards
+Bootstrap website -> Components -> Card
+
+
+We will paste the below code after {% for %} tag.
+
+course_list.html
+--------------
+{% for course in object_list %}
+<div class="card" style="width: 18rem;">
+  <div class="card-body">
+    <h5 class="card-title">{{ course.title|upper }}</h5>
+    <p class="card-text">{{ course.get_level_display }}</p>
+    <a href="{% url 'course_detail' course.pk%}" class="btn btn-primary">Go Detail</a>
+  </div>
+</div>
+{% endfor %}
+
+
+79. Adjust the layout and sizes
+
+templates/course_list.html
+--------------------
+{% block body %}
+<div class="container text-center">
+<h1 class="text-center m-5">LIST Page</h1>
+{% for course in object_list %}
+<div class="card m-1 d-inline-flex" style="width:18rem; height:10rem;">
+  <div class="card-body">
+    <h5 class="card-title h-50">{{ course.title|upper }}</h5>
+    <p class="card-text">{{ course.get_level_display }}</p>
+    <a href="{% url 'course_detail' course.pk%}" class="btn btn-primary p-0 d-block w-50 mx-auto" style="height:1.2rem;font-size:0.8rem">Go Detail</a>
+  </div>
+</div>
+{% endfor %}
+</div>
+{% endblock %}
+
+
+
+
+80. Bootstrap utilities
+
+-> text-center: To move content or nested elements to the center horizontally
+-> m-#: Spacing utility to adjust margin. We can specify numbers between 0 to 5.
+-> d-inline-flex: Display or Flex utility to change the element to flex inline box
+-> h-#: Sizing utility to adjust the height of the element relative to the parent element. 50 means 50% of the parent element's height.
+-> p-#: Spacing utility to adjust padding. We can specify numbers between 0 and 5.0 means zero padding
+-> d-block: Display utility to change the element to a block element.
+-> w-#: Sizing utility to adjust the width of the element relative to the parent element. 50 means 50% of the parent element's width.
+-> mx-auto: Spacing utility to horizontally center fixed-width block-level content.
+
+
+
+81. Style the Detail and Delete page
+
+
+course_detail.html
+-------------------
+{% block body %}
+<div class="container text-center">
+<h1 class="text-center m-5">DETAIL Page</h1>
+<p class="text-muted mb-0">Course Title</p>
+<h5>{{ object.title|upper }}</h5>
+<p class="text-muted mt-3 mb-0">Level</p>
+<h5>{{ object.get_level_display }}</h5>
+<p class="text-muted mt-3 mb-0">Assigned Employees</p>
+{% for emp in object.employee.all %}
+<p class="mb-0">{{ emp.name }} : {{ emp.division }}</p>
+{% endfor %}
+<a href="{% url 'course_update' object.pk%}" class="btn btn-warning m-3">Update</a>
+<a href="{% url 'course_delete' object.pk%}" class="btn btn-danger m-3">Delete</a>
+</div>
+{% endblock %}
+
+
+
+
+# Update the footer in the base.htm file
+
+{% endblock %}
+<h6 class="text-muted text-center mt-5" style="font-size:0.8rem">2023 Employee Learning</h6>
+
+
+82. Update the delete page
+
+templates/course_delete.html
+---------------
+{% block body %}
+<div class="container text-center">
+<h1 class="text-center m-5">DELETE Page</h1>
+<form method="post"> {% csrf_token %}
+<p>Are you sure you want to delete "{{ object }}"?</p>
+<input type="submit" value="Confirm" class="btn btn-danger">
+</form>
+</div>
+{% endblock %}
+
+
+
+83. Crispy Forms
+
+-> Bootstrap cannot handle Django auto-generated input forms directly.
+-> So, styling the create and update pages requires an additional tool called "Crispy Forms"
+
+Steps to implement Crispy Forms
+1. Install Crispy Forms and Bootstrap 5 Template pack
+2. Update settings.py
+3. Update the Create and Update page templates
+4. Check the results
+
+
+
+84. Crispy Forms: Install Crispy Forms and Bootstrap 5 Template pack
+
+-> Add two library names in the requirements.txt file:
+	django-crispy-forms
+	crispy-bootstrap5
+
+C:\> pip install -r requirements.txt
+
+
+85. Crispy Forms: Update settings.py
+
+project1/project1/settings.py
+---------------
+# template directory path
+TEMPLATE_DIR = BASE_DIR / 'templates'
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+INSTALLED_APPS = [
+	...,
+	'crispy_forms',
+	'crispy_bootstrap5',
+	]
+
+
+
+86. Crispy Forms: Update the Create and Update page templates
+
+-> To use Crispy Forms: make two adjustments
+
+1. Add the {% load crispy_forms_tags %} tag to load Crispy Forms
+2. Change {{ form.as_p }} to {{ form|crispy }}
+
+Let's try to make the form sizing nice and responsive:
+
+
+templates/employee_learning/course_create.html
+-----------------
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block body %}
+<div class="container w-50" style="min-width:300px;max-width:500px;">
+<h1 class="m-5 text-center">CREATE Page</h1>
+<form method="post"> {% csrf_token %}
+{{ form|crispy }}
+<input type="submit" value"Save" class="btn btn-primary d-block mx-auto">
+</form>
+</div>
+{% endblock %}
+
+
+
+87. Library Documentation reference: Django Crispy Forms
+
+- Customize Views(1) - Change List Order
+- Customizing Views(2) - Filter Lists
+- Context
+- Customizing Views(3) - Add Extra Context
+
+
+88. Customize Views(1) - Change List Order
+
+- Using the queryset attribute and the order_by method,we an easily change the order of the list.
+
+
+89. Change the list data order
+
+- Change the order of the list on the List page based on the course title. Edit the CourseList view. Comment out the model as queryset and model have similar functionality.
+
+
+employee_learning/views.py
+----------------
+class CourseList(ListView):
+	# model = LearningCourse
+	queryset = LearningCourse.objects.order_by('title')
+	template_name = 'employee_learning/course_list.html'
+	context_object_name = 'course_object_list'
+
+
+
+90. Reverse Order
+
+- To reverse the order, we need to add '-' before the field name.
+
+employee_learning/views.py
+----------------
+class CourseList(ListView):
+	# model = LearningCourse
+	queryset = LearningCourse.objects.order_by('-title')
+	template_name = 'employee_learning/course_list.html'
+	context_object_name = 'course_object_list'
+
+
+91. Customizing Views(2) - Filter Lists
+
+- Using the queryset attribute and the filter method, we can filter the list on the list page.
+
+
+92. Filter objects with the field that matches a keyword
+
+- To display only basic-level courses, edit the CourseList view. Comment out the previous queryset.
+
+
+employee_learning/views.py
+----------------
+class CourseList(ListView):
+	# model = LearningCourse
+	# queryset = LearningCourse.objects.order_by('-title')
+	queryset = LearningCourse.objects.filter(level='B')
+	template_name = 'employee_learning/course_list.html'
+	context_object_name = 'course_object_list'
+
+
+
+93. Customize filtering
+
+- The filter method has the functionality to customize filtering approaches:
+
+-> filter(field__contains='keyword')
+	Filter objects that contain 'keyword'
+-> filter(field__startwith='keyword')
+	Filter objects that start with 'keyword'
+-> filter(field__endwith='keyword')
+	Filter objects that end with 'keyword'
+-> filter(field__gt='number or string')
+-> filter(field__gte='number or string')
+-> filter(field__lt='number or string')
+-> filter(field__lte='number or string')
+
+- If you want to get the courses whose names include 'Docker' use filter(title__contains='Docker')
+- To implement this, edit the CourseList view.
+
+
+employee_learning/views.py
+----------------
+class CourseList(ListView):
+	# model = LearningCourse
+	# queryset = LearningCourse.objects.order_by('-title')
+	# queryset = LearningCourse.objects.filter(level='B')
+	queryset = LearningCourse.objects.filter(title__contains='Docker')
+	template_name = 'employee_learning/course_list.html'
+	context_object_name = 'course_object_list'
+
+
+
+94. Context
+
+- 'Context' is frequently used word when we write views.
+- It is a set of dictionary-type data mapping variable names to variable values that are transferred from views to templates.
+
+
+95. Check context data in the terminal
+
+
+employee_learning/views.py
+----------------
+class CourseList(ListView):
+	# model = LearningCourse
+	# queryset = LearningCourse.objects.order_by('-title')
+	# queryset = LearningCourse.objects.filter(level='B')
+	queryset = LearningCourse.objects.filter(title__contains='Docker')
+	template_name = 'employee_learning/course_list.html'
+	context_object_name = 'course_object_list'
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		print(context)
+
+
+- After the changes above, we don't see any list items when we visit the list page in the browser. But we will get output in the terminal something like below:
+
+[11/Nov/2024 08:23:12] "GET /employee-learning/course-list/ HTTP/1.1" 200 520
+{'paginator': None, 'page_obj': None, 'is_paginated': False, 'object_list': <QuerySet [<LearningCourse: Docker Introduction>]>, 'course_object_list': <QuerySet [<LearningCourse: Docker Introduction>]>, 'view': <employee_learning.views.CourseList object at 0x000001F186E8FBB0>}
+[11/Nov/2024 08:23:17] "GET /employee-learning/course-list/ HTTP/1.1" 200 520
+
+
+- In the above output, we can see the context carries several data sets that are used to display list items on the list page.
+
+
+
+96. Customize Views(3) - Add Extra Context
+
+-> The 'context' data are already generated when we specify the model or queryset attribute.
+-> By overriding the get_context_data method, we can also add new context data.
+
+
+97. Override the get_context_data method
+
+-> Add new context data 'today'
+-> In views.py, add import the datetime function so that we can use in the overriding method.
+-> In the CourseList view, override the get_context_data method.
+
+employee_learning/views.py
+----------------
+from django.urls import reverse_lazy
+import datetime
+class CourseList(ListView):
+	# model = LearningCourse
+	# queryset = LearningCourse.objects.order_by('-title')
+	# queryset = LearningCourse.objects.filter(level='B')
+	queryset = LearningCourse.objects.filter(title__contains='Docker')
+	template_name = 'employee_learning/course_list.html'
+	context_object_name = 'course_object_list'
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['today'] = datetime.date.today()
+		return context
+
+
+98. Add the new context in the template file
+
+-> Now, a new context, 'today', is available.
+-> To display it on the List page, update the course_list.html file.
+
+templates/employee_learning/course_list.html
+------------------------
+{% block body %}
+<div class="container text-center">
+<h1 class="text-center m-5">LIST Page</h1>
+<p class="text-muted text-center mb-5">As of {{ today }}</p>
+{% for course in object_list %}
+<div class="card m-1 d-inline-flex" style="width:18rem; height:10rem;">
+  <div class="card-body">
+    <h5 class="card-title h-50">{{ course.title|upper }}</h5>
+    <p class="card-text">{{ course.get_level_display }}</p>
+    <a href="{% url 'course_detail' course.pk%}" class="btn btn-primary p-0 d-block w-50 mx-auto" style="height:1.2rem;font-size:0.8rem">Go Detail</a>
+  </div>
+</div>
+{% endfor %}
+</div>
+{% endblock %}
+
+
+
+99. Modularize Templates - {% include %} tag
+
+-> In the web design, several design components can be re-utilized on several pages, such as the navigation top bar or footer.
+-> Django templates can support the elimination of redundancy by modularizing templtes.
+-> The {% include %} tag is used to include the modular parts in a template file.
+
+
+
+100. Use modular Django templates
+
+a) Creating module templates
+
+Create three module templates:
+-> css_link.html
+-> navbar.html
+-> footer.html
+
+For better folder management, create a base directory under the templates directory and place the base.html and the three new HTML files.
+
+base/
+	base.html
+	css_link.html
+	navbar.html
+	footer.html
+
+
+b) Adjust other template files to keep the link with base.html
+
+-> As we moved the base.html file, we need to adjust the path to the file in other template files.
+-> Edit the following files
+	- course_create.html
+	- course_delete.html
+	- course_detail.html
+	- course_list.html
+	- course_update.html
+
+templates/employee_learning/course_list.html
+-----------------
+...
+{% block body %}
+{% extends "base/base.html" %}
+...
+
+
+Edit the remaining four files.
+
+
+c) Move the code to each module template from base.html
+
+-> Cut out each part of the code and paste it into each template file. For example:
+
+
+templates/base/css_link.html
+-------------
+...
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+...
+
+
+templates/base/navbar.html
+-----------
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+<div class="container fluid">
+...
+</div>
+</nav>
+
+
+templates/base/footer.html
+-------------
+    <h6 class="text-muted text-center mt-5" style="font-size:0.8rem">2023 Employee Learning</h6>    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+
+d) Add {% include %} tags in base.html
+
+-> Add {% include %} tags with related HTML paths in the palce where we cut the code.
+-> The base.html file becomes very simple.
+
+
+templates/base/base.html
+-----------------
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Employee Learning</title>
+	{% include "base/css_link.html" %}
+
+  </head>
+  <body>
+	{% include "base/navbar.html" %}
+
+	{% block body %}
+	<p>Insert body contents here</p>
+	{% endblock %}
+
+	{% include "base/footer.html" %}
+
+  </body>
+</html>
+
+
+
+101. Static Files in Development Environment - {% static %} tag
+
+-> Static files are files that don't change dynamically, such as image, video, CSS, and JavaScript files.
+-> Static files are typically saved in a particular location for efficient resource handling.
+
+
+
+102. Static directory location
+
+-> In Django, the static directory is usually placed directly under the project with sub-directories such as css, image or js.
+-> The static directory should be registered in the settings.py file so that Django can handle static files properly.
+
+projec1/project1/settings.py
+--------------
+STATIC_URL = 'static/'
+STATICFILES_DIRS = [BASE_DIR/'static']
+
+
+103. Create a static directory tree
+
+project1\
+	project1\
+	employee_learning\
+	templates\
+	static\
+		css\
+		images\
+
+
+
+104. {% static %} tag
+
+-> In Django template files, {% static %} tags are used to access the static files stored under the static directory.
+-> There are two rules:
+1. Add {% load static %} tag at the beginning of each template file. With this tag, the template file loads static files. In extended template files, we also need to put this tag even though the parent file has this tag.
+2. Use {% static 'file path' %} tag where we need to define the static file path. The file path should be written as 'relative path from the static directory'.
+
+
+
+105. Add a CSS file
+
+a) Create static directories and edit settings.py
+
+-> Creating required directories and edit settings.py
+
+
+b) Create a CSS file
+
+-> Create the custom.css file under the css directory, and add a simple code.
+
+static/css/custom.css
+------------
+body {
+	background-color: lightblue;
+}
+
+
+c) Edit css_link.html
+
+-> Add the <link> tag to make a link with a new custom.css file.
+
+templates/base/css_link.html
+-----------------
+<link rel="stylesheet" href="{% static 'css/custom.css' %}">
+
+
+
+106. Add images to Django templates
+
+-> add icons on the create, update, and delete pages.
+
+a) Prepare image files
+
+-> Save the icons under the images directory under the static directory.
+
+-> Add the following in the course_create.html
+
+{% load static %} should be after {% extends "base/base.html" %}.
+Also, change the tile name from "CREATE Page" to "CREATE" considering the title size balance.
+
+
+templates/employee_learning/course_create.html
+----------------------
+{% extends "base/base.html" %}
+{% load static %}
+
+{% load crispy_forms_tags %}
+{% block body %}
+<div class="container w-50" style="min-width:300px;max-width:500px;">
+<h1 class="m-5 text-center"><img src="{% static 'images/create.jpg' %}" width="50px">CREATE</h1>
+...
+
+
+Do the same for the 'update' and 'delete' pages.
+
+
+
+107. STATIC_URL and STATICFILES_DIRS
+
+-> STATIC_URL defines the URL that is linked with the project directory locations defined by STATICFILES_DIRS.
+-> The 'static' directory usually set directly under the project directory, but we can also set it under each app.
+-> WE can setup multiple 'static' directories.
+-> Django handles the 'static' files in the different 'static' directories as if they are under the same directory.
+-> For example, when there is a HTTP request 'http://127.0.0.1:8000/static/img-1.jpg', Django gets resource from the 'static' directory under the 'project1' directory.
+
+-> When there is a HTTP request 'http://127.0.0.1:8000/static/img-2.jpg', Django gets the resource from the 'static' directory under the 'app_a' (employee_learning).
+
+
+
+108. Create Index HTML
+
+
+Browser (User flow)
+	-> Landing page
+		-> List Page
+			-> Detail Page
+				- Edit Page
+				- Delete Page
+		-> Create Page
+		-> Key updates to create Landing Page
+			- urls.py (main & under app)
+			- views.py (under app)
+			- Templates (index.html & navbar.html)
+
+
+-> Usually, index.html is used for the home page.
+-> To create the home page, we need to update the urls.py files to redesign the URL structure, add a view for the home page and update template files.
+
+
+
+109. Redesign URL structure (Update the urls.py files)
+
+main urls.py is under config directory:
+project1/project1: This is config directory
+
+main urls.py: project1/project1/urls.py
+-> This is the first touch point when it comes to HTTP response.
+
+Then, it includes the urlpatterns written in urls.py under the employee_learning app.
+
+
+
+110. The main urls.py
+
+-> First, we need to adjust the way 'employee_learning' paths can be included.
+-> We used 'employee-learning' as a part of the URL to make a clear contrast between test_app and employee_learning. But we can leave that part blank so that we can define the view of the index page in urls.py in the 'employee_learning' app.
+
+Then, the URLs of the pages for the employee_learning app become shorter as we don't need to use full paths of the directory tree.
+
+project1/project1/urls.py
+----------------
+...
+urlpatterns = [
+	path('', include('employee_learning.urls')),
+	path('admin/', admin.site.urls),
+	path('test-app/', include('test_app.urls')),
+    	# path('employee-learning/', include('employee_learning.urls')),
+]
+
+
+
+111. app urls.py
+
+Next, we need to define the path and view of the home page.
+-> As the home page should be accessible when a user accesses the domain itself.
+
+We use Index, to avoid typing additional path:
+
+employee_learning/urls.py
+------------
+from .views import ..., Index
+...
+urlpatterns = [
+    path('', Index.as_view(), name='index'),
+    path('course-list/', CourseList.as_view(), name='course_list'),
+    path('course-detail/<int:pk>/', CourseDetail.as_view(), name="course_detail"),
+    path('course-create/', CourseCreate.as_view(), name='course_create'),
+    path('course-update/<int:pk>/', CourseUpdate.as_view(), name="course_update"),
+    path('course-delete/<int:pk>/', CourseDelete.as_view(), name="course_delete"),
+]
+
+
+
+112. Create Index view
