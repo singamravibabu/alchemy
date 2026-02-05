@@ -196,12 +196,22 @@ urlpatterns = [
 
 
 
-18. Create a new app "employee_learning"
+STEP 18:
+Create a new app "employee_learning"
 
-C:\> python manage.py startapp employee_learning
+C:\alchemy\project1> python manage.py startapp employee_learning
+
+project1/
+	emploee_learning/
+	project1/
+	templates/
+	test_app/
+	manage.py
 
 
-19. Register the new app in settings.py
+
+STEP 19:
+Register the new app (employee_learning) in settings.py
 
 project1/project1/settings.py
 ----------------------------
@@ -217,7 +227,12 @@ INSTALLED_APPS = [
 ]
 
 
-20. Edit the models.py file
+
+STEP 20:
+Edit the models.py file
+
+models.py -> models (classes) -> Each class is a model
+Each model -> converted to -> database table
 
 employee_learning/models.py
 ----------------------------
@@ -225,8 +240,22 @@ from django.db import models
 class Employee(models.Model):
 	name=models.CharField(max_length=25)
 
+Employee (table)
+	-> id (column - created automatically)
+	-> name (column)
+		-> 25 characters max
 
-21. The makemigrations command
+In the next step we need to apply the changes in the models.py file to database using the following command:
+-> makemigrations
+	python manage.py makemigrations app_name	# app_name
+	python manage.py makemigrations		# all apps
+-> migrate
+	python manage.py migrate
+
+
+
+STEP 21:
+The makemigrations command
 
 C:\> python manage.py makemigrations employee_learning
 
@@ -239,16 +268,27 @@ class Employee(models.Model):
 class Division(models.Model):
 	div_name=models.CharField(max_length=25)
 
+
+Division (table)
+	-> id (column - created automatically)
+	-> div_name (column)
+		-> 25 characters max
+
+
 C:\> python manage.py makemigrations employee_learning
 
 
-22. The migrate command
+
+STEP 22:
+The migrate command
 
 C:\> python manage.py migrate
 C:\> python manage.py runserver
 
 
-23. Add Models in Django Admin – admin.py
+
+STEP 23:
+Add Models in Django Admin – admin.py
 
 employee_learning/admin.py
 ----------------------------
@@ -262,7 +302,9 @@ admin.site.register(Division)
 Go to localhost:8000/admin/
 
 
-24. Change Display Name of Record Objects
+
+STEP 24:
+Change Display Name of Record Objects
 
 employee_learning/models.py
 ----------------------------
