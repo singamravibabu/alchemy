@@ -253,6 +253,49 @@ In the next step we need to apply the changes in the models.py file to database 
 	python manage.py migrate
 
 
+Filed Types for strings:
+- CharField: small to large strings
+	- max_length
+- TextField: used to store large text
+	- max_length
+SlugField: to store string of alphabets, numbers, underscores, or hyphens, which are generally used in URLs
+	- max_length (default max_length is 50)
+URLField: used to store URL validated by a URL validator
+	max_length (default max_length is 200)
+
+Field Types for Logic:
+- BooleanField: used to store True or False (it becomes checkbox in the form)
+
+Field Types for Numbers:
+- IntegerField: -2147483648 to 2147483647
+- PositiveIntegerField: 0 to 2147483647 
+- FloatField: represented by a Python float instance
+- DecimalField: store a fixed-precision decimal umbr
+	- decimal_places
+	- max_digits
+- AutoField: used to store an integer that automatically increments.
+	- Used for primary key
+
+Field Types for Date & Time:
+- DateField: represented in Python by a datetime.date instance
+	- auto_now_add
+	- auto_now
+- DateTimefield: represented in Python by a datetime.datetime instance
+	- auto_now_add
+	- auto_now
+- TimeField: to store time, represented in Python by datetime.time instance
+	- auto_now_add
+	- auto_now
+
+Field types for Files:
+- ImageField
+	- upload_to
+	- height_field
+	- width_field
+-FileField
+	- upload_to
+	- storage
+
 
 STEP 21:
 The makemigrations command
@@ -316,7 +359,8 @@ class Division(models.Model):
 
 
 
-25. Customize record names
+STEP 25:
+Customize record names
 
 employee_learning/models.py
 ------------------------------
@@ -328,7 +372,8 @@ class Employee(models.Model):
 
 
 
-26. Add a new field in an existing model after data entry
+STEP 26
+Add a new field in an existing model after data entry
 
 employee_learning/models.py
 ---------------------------
@@ -340,7 +385,9 @@ class Division(models.Model):
 		return self.div_name
 
 
-27. Run the makemigrations command
+
+STEP 27:
+Run the makemigrations command
 
 C:\> python manage.py makemigrations employee_learning
 
@@ -351,17 +398,23 @@ Command Line - INTERACTIVE
 >>> False
 
 
-28. Run the migrate command
+
+STEP 28:
+Run the migrate command
 
 C:\> python manage.py migrate
 
 
-29. Check the Django admin site
+
+STEP 29:
+Check the Django admin site
 
 Go to localhost:8000/admin/
 
 
-30. Add choices option & verbose_name, default options
+
+STEP 30:
+Add choices option & verbose_name, default options
 
 employee_learning/models.py
 ----------------------------
@@ -374,36 +427,49 @@ class Employee(models.Model):
 		return self.name
 
 
-31. The default option
+
+STEP 31:
+The default option
 
 employee_learning/models.py
 ----------------------------
 priority=models.CharField(max_length=1, choices=PRIORITIES, default="M")
 
 
-32. The verbose_name option
+
+STEP 32:
+The 'verbose_name' option
 
 employee_learning/models.py
 -----------------------------
 priority=models.CharField(max_length=1, verbose_name="Learning Priorities", choices=PRIORITIES, default="M")
 
 
-33. Execute the changes in the database
+
+STEP 33:
+Execute the changes in the database
 
 C:\> python manage.py makemigrations employee_learning
 C:\> python manage.py migrate
 
 
-34. Check the admin site
 
-Run the runserver command and go to the admin page. You can confirm that the three options (1. choices, 2. default, 3. verbose_name) are appropriately executed.
+STEP 34:
+Check the admin site
+
+Run the 'runserver' command and go to the admin page.
+You can confirm that the three options (1. choices, 2. default, 3. verbose_name) are appropriately executed.
+
+
 
 
 DateField with datetime Module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-35. Add an editable data registration date
+
+STEP 35:
+Add an editable data registration date
 
 employee_learning/models.py
 ----------------------------
@@ -413,14 +479,15 @@ class Employee(models.Model):
 	PRIORITIES=[('H','High'), ('M','Medium'),('L','Low'),]
 	name=models.CharField(max_length=25, verbose_name="Employee Name")
 	priority=models.CharField(max_length=1, choices=PRIORITIES, default="M", verbose_name="Learning Priorities")
-	reg_date=models.DateField(default= datetime.date.today, verbose_name="Data Registration Date")
+	reg_date=models.DateField(default= datetime.date.today, verbose_name="Registration Date")
 
 	def __str__(self):
 		return self.name
 
 
 
-36. Execute the changes in the database and check the admin site
+STEP 36:
+Execute the changes in the database and check the admin site
 
 C:\> python manage.py makemigrations employee_learning
 C:\>  python manage.py migrate
@@ -430,8 +497,20 @@ C:\>  python manage.py runserver
 
 Django Models – Relationship Fields
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- There are three types of relationships:
+	-> one-to-many
+	-> one-to-one
+	-> many-to-many
+- Django handles the relationships using Relationship Fields (columns)
 
-37. Learn how to use ForeignKey
+## One-To-Many (Many-To-One) relationship:
+- Each record in one table correspond to many records in another table
+- This relationship is handled through ForeignKey in Django.
+
+
+
+STEP 37:
+Learn how to use ForeignKey
 
 a) Add a new field in the Employee model in models.py
 
@@ -496,13 +575,14 @@ d) Migrate the model into the database and run the runserver
 
 C:\> python manage.py migrate
 C:\> python manage.py runserver
-
-
 e) Check the Django admin site
 
 
 
-38. OneToOneField
+STEP 38:
+OneToOneField
+
+One-To-One means, each record in one table corresponds to one record in another table.
 
 a) Add Personal Info model in models.py
 
@@ -535,7 +615,16 @@ C:\> python manage.py migrate
 C:\> python manage.py runserver
 
 
-39. ManyToManyField
+
+STEP 39:
+ManyToManyField
+
+Types of relationships:
+- One-to-one
+- One-to-many or many-to-one
+- many-to-many (avoid it as much as possible)
+
+To connect the two tables using ManyToManyField, Django automatically creates the 'intermediatory join table'.
 
 a) Add LearningCourse model in models.py
 
@@ -579,22 +668,158 @@ C:\> python manage.py runserver
 
 
 
-Create CRUD Web Application
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+CREATE 'CRUD' WEB APPLICATION
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+CRUD is the acronym for Create, Read, Update, and Delete
+- Four functions represent the minimum operations use in database applications.
 
-40. Import generic views and models used in this view
+Create (C)
+- Creates new records in the systems
+- Example: Create an article and the system will register it
+
+Read (R)
+- Read (retrieves) existing data records in the system
+- Example: The system retrieves posted articles to display them
+
+Update (U)
+- Updates existing data records
+- Example: Update the posted blog articles and the system updates the records
+
+Delete (D)
+- Deletes existing data records from the system
+- Bloggers delete posted blog articles, and the system removes the records
+
+
+CRUD in web applications
+========================
+In web applications, the CRUD concept is executed through web pages.
+- Content editors go to the content posting page (Create Page) to post their content.
+- The posted content can be read by users on a list-style page with a list of many content items (List Page) or a particular content page (Detail Page).
+- When content editors want to edit or delete the existing content, they can edit or delete it on the Update Page or Delete Page.
+
+
+Basic CRUD Structure in Django
+==============================
+- Django framework is well-designed to execute the 'CRUD concept' efficiently.
+- Five key design points exist to build a CRUD-based web application in Django.
+
+1. views.py
+-----------
+- views.py is used to build logic to handle HTTP requests dispatched from urls.py
+- Django provides premade logic templates names 'generic views'
+- By using generic views, you can build web applications with simple code
+- To handle each CRUD page, you need to design different views for each page
+
+2. urls.py
+----------
+- urls.py is used as a 'URL dispatcher'
+- Dispatches the request to related views (defined in the views.py file)
+- To handle each CRUD page, you need to define different URL patterns for each page
+
+3. Templates
+------------
+- 'Django templates' usually consists of multiple HTML files
+- They are saved under 'templates' directory whose path is defined in 'settings.py'
+- Them template HTML files are used to convert data handled by views.py into the HTML format
+- To handle each CRUD page, you usually need to prepare different HTML files for each page
+
+4. settings.py
+--------------
+- Defining key paths or registering domains to allow access to the web application
+
+5. models.py
+------------
+- models.py is used to design a database for web application
+
+
+Django Generic Views
+====================
+- Build-in class-based views
+- Eliminates repetitive coding
+- Provides frequently used logic in class formats
+
+Base views:
+	View
+	TemplateView
+	RedirectView
+
+Generic display views:
+	ListView	Read
+	DetailView	Read
+Generic editing views:
+	FormView
+	CreateView	Create
+	UpdateView	Update
+	DeleteView	Delete
+
+
+- Generic views in Django are built-in class-based views.
+- Generic views are developed to eliminate repetitive coding by providing frequently used logic in class format.
+- Using generic views, we can build web applications with simple code.
+- Base view: View is ancestor of all views
+- RedirectView is used for URL redirections
+
+
+In a simple CRUD application, there are five frequently used generic views:
+ListView		- R of (CRUD)
+DetailView		- R of (CRUD)
+CreateView		- C of (CRUD)
+UpdateView		- U of (CRUD)
+DeleteView		- D of (CRUD)
+
+
+ListView
+-----------
+- Provides logic to display list of objects (from a database)
+
+DetailView
+-----------
+- Provides logic to display a particular object (from a database)
+
+CreateView
+----------
+- Provides the logic to display an input form to create an object
+- When inputs are submitted, CreateView handles the inputs and registers the data in a database
+
+UpdateView
+----------
+- Provides logic to display an input form to update an object
+- When inputs are submitted, UpdateView handles the modification of the registered data in a database
+
+DeleteView
+- Provides logic to display a page for the data delete action and handle the data delete process
+
+
+How to Write Class-Based Views with Generic Views
+=================================================
+views.py
+--------
+from django.views.generic import ListView
+from .models import MyModel
+class MyView(ListView):
+	template_name = 'list.html'
+	model = MyModel
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['now'] = timezone.now()
+		return context
+
+
+The above code has four sections:
+1. Import generic views and models used in this view
+2. Create a new view using a generic view
+3. Set 'attribute values' for each attribute defined for each generic view
+4. Customize the generic view (e.g., set a new context)
+
+
+STEP 40:
+Import generic views and models used in this view
 
 
 browser -> urls.py -> views.py -> templates (directory) -> HTML files
 
 All generic views are stored in django.view.generic. Import five generic views (class-based views):
-• ListView		- R of (CRUD)
-• DetailView		- R of (CRUD)
-• CreateView		- C of (CRUD)
-• UpdateView		- U of (CRUD)
-• DeleteView		- D of (CRUD)
 
 
 employee_learning/views.py
