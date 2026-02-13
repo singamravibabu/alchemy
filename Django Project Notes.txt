@@ -813,8 +813,92 @@ The above code has four sections:
 4. Customize the generic view (e.g., set a new context)
 
 
-STEP 40:
-Import generic views and models used in this view
+1. Import generic views and models used in this view
+=====================================================
+Import generic views
+--------------------
+First we need to import generic views
+Generic views are stored in jango.view.generic
+Example: ListView
+
+from django.views.generic import ListView
+
+
+Import models
+-------------
+Import the models to be used in the view
+
+from .models import MyModel
+
+The . (dot) means that the same directory as the views.py is located.
+
+
+2. Create a new view using a generic view
+=========================================
+- We can create a view through inheritance
+- The way to write a class-based view:
+	-> Class is written in PascalCase: MyView
+	-> Use the parent class name as an argument of the class to inherit the parent class, like ListView: MyView(ListView)
+
+
+3. Set 'attribute values' for each attribute defined for each generic view
+=========================================================
+- Each generic view has its own attributes
+- As generic views inherit attributes from their ancestor views, several common attributes are used for different generic views.
+- There are two attributes in the example, there are many other attributes:
+	template_name : set an html file used for this view
+	model : set a model to be used for this view
+
+
+4. Customize the generic view
+=============================
+- Generic views are equipped with basic functionalities, you may need to customize them.
+- You can do:
+	-> add a query to show selected data or to change the order of content items
+	-> add context (a dictionary of data that is passed from a view to an HTML template)
+	-> add logic to display content such as differentiating user interface depending on login status
+- Customization of views is done in a way that overrides in the generic view.
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context['now'] = timezone.now()
+		return context
+
+
+This get_context_data is initially defined in SingleObjectMixin class.
+
+
+Generic view basic attributes
+*****************************
+model
+========
+- Defines the model for which the view will display data
+- The model attribute can be replaced by the queryset attribute
+- Its defined in SingleObjectMixin and MultipleObjectMixin
+	'model = MyModel'
+
+
+queryset
+========
+- Also used to define the model for the view
+- querset give more functionalities using several method:
+	-> all(): retrieves all objects
+		'queryset = ModelName.objects.all()'
+		same as 'model = ModelName' 
+	-> filter(): returns objects that match given lookup parameters
+	-> order_by(): returns objects in order, you can use "-"
+		order_by('name')
+		order_by('-name') : to reverse the order
+
+template_name
+=============
+- Defines the path of the HTML file template for the view
+
+
+
+
+STEP N:
+
 
 
 browser -> urls.py -> views.py -> templates (directory) -> HTML files
