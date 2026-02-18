@@ -893,28 +893,95 @@ queryset
 template_name
 =============
 - Defines the path of the HTML file template for the view
+- The path of the file should be relative to the templates directory set in the settings.py file
+- The template_name attribute is defined in TemplateResponseMixin
+
+context_object_name
+===================
+- Used to add a name to the object passed to template files
+
+Example for ListView without context_object_name
+--------------------------------------------------
+from django.views.generic import ListView
+from .models import LearningCourse
+
+class CourseList(ListView):
+	model = LearningCourse
+	template_name = "test.html"
+
+HTML code in test.html using DTL (Django Template Language)
+{% for course in object_list %}
+	{{ course.title }}
+{% endfor %}
+
+
+
+Example for ListView with context_object_name
+--------------------------------------------------
+from django.views.generic import ListView
+from .models import LearningCourse
+
+class CourseList(ListView):
+	model = LearningCourse
+	template_name = "test.html"
+	context_object_name = "courses"
+
+{% for course in courses %}
+	{{ course.title }}
+{% endfor %}
+
+
+Example for DetailView
+----------------------
+from django.views.generic import ListView
+from .models import LearningCourse
+
+class CourseDetail(DetailView):
+	model = LearningCourse
+	template_name = "test2.html"
+	context_object_name = "course"
+
+HTML for the DetailView template:
+<h1>{{ course.title }}</h1>
+<p>{{ course.level }}<p>
+
+- If you don't specify context_object_name, Django will:
+1. Use object_list for lists
+2. Use object for single object
+3. Also provide model name automatically in lowercase:
+	course_list
+	course
+
+fields
+=========
+- Used to define model fields shown in the input form pages (create page and update page)
+- This attribute is required if you are generating the form class automatically.
+- The fields attribute is defined in ModelFormMixin
+
+success_url
+===========
+- Used to define the URL to redirect to when the form is successfully processed.
+- Required for generic editing views
+- reverse_lazy() is resolve Django URL names into URL paths
 
 
 
 
-STEP N:
+STEP 40:
+Import the Generic Views and Models in this view
 
+All generic views are stored in django.views.generic. Import five generic views (class-based views):
 
+File: employee_learning/views.py
 
-browser -> urls.py -> views.py -> templates (directory) -> HTML files
-
-All generic views are stored in django.view.generic. Import five generic views (class-based views):
-
-
-employee_learning/views.py
----------------------------
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import LearningCourse
 
 
 
-41. Create the CourseList and CourseDetail views
+STEP 41:
+Create the CourseList and CourseDetail views
 
 Syntax: views.py
 class MyView(ListView):
@@ -923,10 +990,8 @@ class MyView(ListView):
 
 template_name = subdir/template.html
 
+File: employee_learning/views.py
 
-
-employee_learning/views.py
------------------------------
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import LearningCourse
@@ -941,7 +1006,9 @@ class CourseDetail(DetailView):
 	context_object_name = 'course_object'
 
 
-42. Create the CourseCreate, CourseUpdate and CourseDelete views
+
+STEP 42:
+Create the CourseCreate, CourseUpdate and CourseDelete views
 
 employee_learning/views.py
 -----------------------------
@@ -969,13 +1036,14 @@ class CourseDelete(DeleteView):
 	success_url=reverse_lazy ('course_list')
 
 
-43. Edit url files
+STEP 43:
+Edit url files
 
 -> Create a new urls.py file under the employee_learning directory
 
 Command Line - INPUT
 C:\> cd employee_learning
-C:\> touch urls.py
+Create urls.py under the app directory employee_learning
 
 a. Import views
 
@@ -1011,7 +1079,9 @@ urlpatterns = [
 ]
 
 
-44. Add an urlpattern in the project urls.py
+
+STEP 44:
+Add an urlpattern in the project urls.py
 
 project1/project1/urls.py
 ---------------------------
@@ -1029,7 +1099,9 @@ path('employee-learning/', include('employee_learning.urls')),
 
 Django Template Language (DTL)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
--> Django templates serve as a bridge between HTML and Python code, especially for views.py
+-> DTL is important to create Django templates
+-> Django template language serve as a bridge between HTML and Python code, especially for views.py file
+-> Using DTL you can embed variables passed by views.py or add simple logic in an HTML template file.
 
 
 {{variable}}
@@ -1038,13 +1110,15 @@ Django Template Language (DTL)
 
 
 {{name|filter}}
-	-> Using the filter we can modify variables for display.
+	-> Using the filter we can modify variables for display
 
-{{name.lower}} -> display the value of the {{name}} variable in lowercase text
+{{name|lower}} -> display the value of the {{name}} variable in lowercase text
 
 {{name|truncatewords:n}} -> displays the first n words of the {{name}} variable 
 
 {{text|linebreaks}} converts line breaks in {{text}} variable to <p> tag
+
+
 
 {{name:default:"default data"}} displays when the {{name}} variable is false or empty
 

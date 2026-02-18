@@ -1,4 +1,4 @@
 {% for course in courses%}
-    <p>{{ course.title }}</p>
+    <p>{{ course.title | lower }}</p>
     <hr>
 {% endfor %}
