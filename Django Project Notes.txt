@@ -1099,35 +1099,36 @@ path('employee-learning/', include('employee_learning.urls')),
 
 Django Template Language (DTL)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
--> DTL is important to create Django templates
--> Django template language serve as a bridge between HTML and Python code, especially for views.py file
+-> DTL is important for creating Django templates
+-> Django template language serve as a bridge between HTML and Python code, especially for data passed from views (views.py)
 -> Using DTL you can embed variables passed by views.py or add simple logic in an HTML template file.
 
 
 {{variable}}
-	-> display data (objects) passed by views.py using this format
-
+	-> displays data (objects) passed by views.py using this format
 
 
 {{name|filter}}
-	-> Using the filter we can modify variables for display
+	-> Using filters we can modify variables for display
 
-{{name|lower}} -> display the value of the {{name}} variable in lowercase text
+
+{{name|lower}} -> displays the value of the {{name}} variable in lowercase text
+
 
 {{name|truncatewords:n}} -> displays the first n words of the {{name}} variable 
 
-{{text|linebreaks}} converts line breaks in {{text}} variable to <p> tag
+
+{{text|linebreaks}} converts line breaks in {{text}} variable to <p> tags
 
 
-
-{{name:default:"default data"}} displays when the {{name}} variable is false or empty
+{{name:default:"default data"}} displays default data when the {{name}} variable is false or empty
 
 
 {%tag%}
-	-> using this format, we can apply simple logic e.g., for.., if...else.
+	-> using this format, we can apply simple logic e.g., for, if, else.
 
 
-{#Comments#}
+{# Comments #}
 	Using this format, we can add comments. Comments won't be displayed in browser.
 
 
@@ -1148,7 +1149,8 @@ list.html
 
 
 
-45. Edit course_list.html
+STEP 45:
+Edit course_list.html
 
 <h1>LIST Page</h1>
 {% for course  in object_list %}
@@ -1162,7 +1164,9 @@ c:\> python manage.py runserver
 Add some dummy data going to Django admin page (localhost:8000/admin) and data for the Learning course
 
 
-46. Add uppercase filter
+
+STEP 46:
+Add uppercase filter
 
 Adding uppercase filter allows to change the title name to uppercase
 
@@ -1176,7 +1180,9 @@ templates/employee_learning/course_list.html
 {% endfor %}
 
 
-47. Check the user-friendly name for object_list
+
+STEP 47:
+Check the user-friendly name for object_list
 
 In CourseList, under views.py file, we set context_object_name = 'course_object_list'.
 
@@ -1189,7 +1195,9 @@ templates/employee_learning/course_list.html
 {% endfor %}
 
 
-48. get_FOO_display method
+
+STEP 48:
+get_FOO_display method
 
 When using choices option in the model, the data shown in the browser may be the key to the choices (not the human-readable name).
 
@@ -1203,7 +1211,9 @@ To display a human-readable name for the field with the choices option
 {{ object.get_FOO_display }}
 
 
-49. Add a human-readable name to the choices option
+
+STEP 49:
+Add a human-readable name to the choices option
 
 a) Add the object and attribute in a normal way
 
@@ -1233,7 +1243,8 @@ templates/employee_learning/course_list.html
 
 
 
-50. Template for Detail Page
+STEP 50:
+Template for Detail Page
 
 
 detail.html
@@ -1252,7 +1263,9 @@ How is a detail page displayed?
 5. DetailView returns HTML document with requested data (record object id=3)
 
 
-51. Create a template for the detail page
+
+STEP 51:
+Create a template for the detail page
 
 We implement the uppercase filter and the get_FOO_display method
 
@@ -1282,7 +1295,9 @@ templates/employee_learning/course_detail.html
 Go the URL: http://127.0.0.1:8000/employee-learning/course-detail/3/
 
 
-52. Template with Model Relations
+
+STEP 52:
+Template with Model Relations
 
 a) Model with ForeignKey
 	One-To-Many
@@ -1301,7 +1316,8 @@ ii. Use the 'for' statement
 
 
 
-53. How to handle ManyToManyField in the detail page template
+STEP 53:
+How to handle ManyToManyField in the detail page template
 
 a) Without the all() method and the for statement
 
