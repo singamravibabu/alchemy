@@ -1,4 +1,6 @@
 {% for course in courses%}
-    <p>{{ course.title | lower }}</p>
+    <p>{{ course.title | upper }} - <br>
+        {{ course.get_level_display}}
+    </p>
     <hr>
 {% endfor %}

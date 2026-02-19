@@ -23,10 +23,11 @@ class CourseCreate(CreateView):
 class CourseUpdate(UpdateView):
     model = LearningCourse
     template_name = "employee_learning/course_update.html"
-    field = ("title", "level", "employee")
+    fields = ("title", "level", "employee")
     success_url = reverse_lazy("course_list")
 
 class CourseDelete(DeleteView):
     model = LearningCourse
     template_name = "employee_learning/course_delete.html"
     success_url = reverse_lazy("course_list")
+    context_object_name = "course"

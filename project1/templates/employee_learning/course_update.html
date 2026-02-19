@@ -1,0 +1,6 @@
+<h1>UPDATE A COURSE</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit", value="Update Course">
+</form>

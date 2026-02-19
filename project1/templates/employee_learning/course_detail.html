@@ -1,4 +1,7 @@
-<h1>{{ course }}</h1>
-<p>{{ course.title }}</p>
-<p>{{ course.level }}</p>
-<p>{{ course.employee }}</p>
+<h1>DETAIL PAGE</h1>
+<p>{{ course.title | upper }}</p>
+<p>Level: {{ course.get_level_display }}</p>
+<p>Assigned Employees:<p>
+{% for emp in course.employee.all %}
+<p>{{ emp.name }} : {{ emp.division }}</p>
+{% endfor %}
